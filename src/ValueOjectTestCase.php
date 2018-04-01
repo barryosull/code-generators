@@ -3,24 +3,36 @@
 namespace Barryosull\CodeGen;
 
 use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\PhpNamespace;
 
 class ValueOjectTestCase
 {
-    public function generateTestCase(string $valueObjectClass, array $validValuesCollection, array $invalidValuesCollection): string
+    public function generateTestCase(
+        string $namespace,
+        string $valueObjectClass,
+        array $validValuesCollection,
+        array $invalidValuesCollection
+    ): string
     {
-        $class = new ClassType("{$valueObjectClass}Test");
+        $namespace = new PhpNamespace($namespace);
+        $namespace->addUse('\PHPUnit\Framework\TestCase');
 
-        $class
-            ->setExtends('\PHPUnit\Framework\TestCase');
+        $class = $namespace->addClass("{$valueObjectClass}Test");
+        $class->setExtends('\PHPUnit\Framework\TestCase');
 
         $this->generateValid($class, $valueObjectClass, $validValuesCollection);
 
         $this->generateInvalid($class, $valueObjectClass, $invalidValuesCollection);
 
-        $code = $this->tabsToSpaces(strval($class));
+        return $this->output($namespace);
+    }
+
+    private function output($namespace)
+    {
+        $code = $this->tabsToSpaces(strval($namespace));
 
         $code =
-"<?php
+            "<?php
 
 $code";
 

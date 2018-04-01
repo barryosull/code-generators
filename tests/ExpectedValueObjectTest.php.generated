@@ -1,6 +1,10 @@
 <?php
 
-class ExpectedValueObjectTest extends \PHPUnit\Framework\TestCase
+namespace Tests\Namespace;
+
+use PHPUnit\Framework\TestCase;
+
+class ExpectedValueObjectTest extends TestCase
 {
     /**
      * @test

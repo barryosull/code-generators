@@ -12,6 +12,7 @@ class ValueObjectTestcaseTest extends TestCase
      */
     public function it_generates_a_valid_testcase()
     {
+        $namespace = 'Tests\Namespace';
         $type = 'ExpectedValueObject';
         $validValues = [
             'description a' => ['value1', 'value2', 'value3'],
@@ -24,7 +25,7 @@ class ValueObjectTestcaseTest extends TestCase
 
         $generator = new ValueOjectTestCase();
 
-        $generated = $generator->generateTestCase($type, $validValues, $invalidValues);
+        $generated = $generator->generateTestCase($namespace, $type, $validValues, $invalidValues);
 
         $expected = file_get_contents(__DIR__."/ExpectedValueObjectTest.php.generated");
 
