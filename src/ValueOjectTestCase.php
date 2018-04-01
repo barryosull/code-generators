@@ -34,12 +34,16 @@ $code";
 
     private function generateValid(ClassType $class, string $valueObjectClass, array $valuesCollection)
     {
+        $body = [
+            '$value = new '.$valueObjectClass.'(...$values);',
+            '$this->assertInstanceOf('.$valueObjectClass.'::class, $value);'
+        ];
+
         $method = $class->addMethod('canCreateValidTypes')
             ->addComment('@test')
             ->addComment('@dataProvider validValues')
             ->setVisibility('public')
-            ->setBody('$value = new '.$valueObjectClass.'(...$values);
-$this->assertInstanceOf('.$valueObjectClass.'::class, $value);');
+            ->setBody(implode("\n", $body));
 
         $method->setVariadic(true)
             ->addParameter('values');
@@ -49,12 +53,16 @@ $this->assertInstanceOf('.$valueObjectClass.'::class, $value);');
 
     private function generateInvalid(ClassType $class, string $valueObjectClass, array $valuesCollection)
     {
+        $body = [
+            '$this->expectException(ValueException::class);',
+            'new '.$valueObjectClass.'(...$values);'
+        ];
+
         $method = $class->addMethod('cannotCreateInvalidTypes')
             ->addComment('@test')
             ->addComment('@dataProvider invalidValues')
             ->setVisibility('public')
-            ->setBody(' $this->expectException(ValueException::class);
-new '.$valueObjectClass.'(...$values);');
+            ->setBody(implode("\n", $body));
 
         $method->setVariadic(true)
             ->addParameter('values');
@@ -75,7 +83,6 @@ new '.$valueObjectClass.'(...$values);');
             $args[] = $values;
         }
 
-        $method->setBody('return [
-'.implode("", $templateRows).'];', $args);
+        $method->setBody("return [\n".implode("", $templateRows)."];", $args);
     }
 }
