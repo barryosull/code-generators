@@ -39,9 +39,9 @@ $invalid
      * @test
      * @dataProvider validValues
      */
-    public function canCreateValidTypes($valueA, $valueB, $valueC)
+    public function canCreateValidTypes(...$values)
     {
-        $value = new '.$valueObjectClass.'($valueA, $valueB, $valueC);
+        $value = new '.$valueObjectClass.'(...$values);
         $this->assertInstanceOf('.$valueObjectClass.'::class, $value);
     }
 
@@ -72,10 +72,10 @@ $invalid
      * @test
      * @dataProvider invalidValues
      */
-    public function cannotCreateInvalidTypes($valueA, $valueB)
+    public function cannotCreateInvalidTypes(...$values)
     {
         $this->expectException(ValueException::class);
-        new '.$valueObjectClass.'($valueA, $valueB);
+        new '.$valueObjectClass.'(...$values);
     }
 
     public function invalidValues()
