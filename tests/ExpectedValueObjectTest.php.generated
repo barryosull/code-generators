@@ -1,0 +1,40 @@
+<?php
+
+class ExpectedValueObjectTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @test
+     * @dataProvider validValues
+     */
+    public function canCreateValidTypes($valueA, $valueB, $valueC)
+    {
+        $value = new ExpectedValueObject($valueA, $valueB, $valueC);
+        $this->assertInstanceOf(ExpectedValueObject::class, $value);
+    }
+
+    public function validValues()
+    {
+        return [
+            'description a' => ['value1', 'value2', 'value3'],
+            'description b' => ['value4', 'value5', 'value6'],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider invalidValues
+     */
+    public function cannotCreateInvalidTypes($valueA, $valueB)
+    {
+        $this->expectException(ValueException::class);
+        new ExpectedValueObject($valueA, $valueB);
+    }
+
+    public function invalidValues()
+    {
+        return [
+            'description a' => ['value1', 'value2'],
+            'description b' => ['value4', 'value5'],
+        ];
+    }
+}
