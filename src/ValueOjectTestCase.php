@@ -2,88 +2,69 @@
 
 namespace Barryosull\CodeGen;
 
+use Nette\PhpGenerator\ClassType;
+
 class ValueOjectTestCase
 {
     public function generateTestCase(string $valueObjectClass, array $validValuesCollection, array $invalidValuesCollection): string
     {
-        $class = new \Nette\PhpGenerator\ClassType('$valueObjectClass');
+        $class = new ClassType("{$valueObjectClass}Test");
 
         $class
-            ->setFinal()
             ->setExtends('\PHPUnit\Framework\TestCase');
 
+        $this->generateValid($class, $valueObjectClass, $validValuesCollection);
 
-        $valid = $this->generateValid($class, $valueObjectClass, $validValuesCollection);
+        $this->generateInvalid($class, $valueObjectClass, $invalidValuesCollection);
 
-        $invalid = $this->generateInvalid($class, $valueObjectClass, $invalidValuesCollection);
+        $code = $this->tabsToSpaces(strval($class));
 
-        return strval($class);
+        $code =
+"<?php
 
-        return "<?php
+$code";
 
-class {$valueObjectClass}Test extends \PHPUnit\Framework\TestCase
-{
-$valid
-
-$invalid
-}
-";
+        return $code;
     }
 
-    private function generateValid(string $valueObjectClass, array $valuesCollection): string
+    private function tabsToSpaces(string $code)
     {
-        $provider = $this->generateProvider('validValues', $valuesCollection);
-
-        $valuesReturn = '';
-        foreach ($valuesCollection as $debugString => $values) {
-
-            $quoteWrappedValues = array_map(function($value){
-                return "'$value'";
-            }, $values);
-
-            $valuesString = implode(", ", $quoteWrappedValues);
-
-            $valuesReturn .= "            '".$debugString."' => [$valuesString],\n";
-        }
-
-        $templateValid = '    /**
-     * @test
-     * @dataProvider validValues
-     */
-    public function canCreateValidTypes(...$values)
-    {
-        $value = new '.$valueObjectClass.'(...$values);
-        $this->assertInstanceOf('.$valueObjectClass.'::class, $value);
+        return str_replace("\t", "    ", $code);
     }
 
-    '.$provider;
+    private function generateValid(ClassType $class, string $valueObjectClass, array $valuesCollection)
+    {
+        $method = $class->addMethod('canCreateValidTypes')
+            ->addComment('@test')
+            ->addComment('@dataProvider validValues')
+            ->setVisibility('public')
+            ->setBody('$value = new '.$valueObjectClass.'(...$values);
+$this->assertInstanceOf('.$valueObjectClass.'::class, $value);');
 
-        return $templateValid;
+        $method->setVariadic(true)
+            ->addParameter('values');
+
+        $this->generateProvider($class,'validValues', $valuesCollection);
     }
 
-    private function generateInvalid(string $valueObjectClass, array $valuesCollection): string
+    private function generateInvalid(ClassType $class, string $valueObjectClass, array $valuesCollection)
     {
-        $provider = $this->generateProvider('invalidValues', $valuesCollection);
+        $method = $class->addMethod('cannotCreateInvalidTypes')
+            ->addComment('@test')
+            ->addComment('@dataProvider invalidValues')
+            ->setVisibility('public')
+            ->setBody(' $this->expectException(ValueException::class);
+new '.$valueObjectClass.'(...$values);');
 
-        $templateValid = '    /**
-     * @test
-     * @dataProvider invalidValues
-     */
-    public function cannotCreateInvalidTypes(...$values)
-    {
-        $this->expectException(ValueException::class);
-        new '.$valueObjectClass.'(...$values);
+        $method->setVariadic(true)
+            ->addParameter('values');
+
+        $this->generateProvider($class,'invalidValues', $valuesCollection);
     }
 
-    '.$provider;
-
-        return $templateValid;
-    }
-
-    private function generateProvider(string $name, array $inputs): string
+    private function generateProvider(ClassType $class, string $name, array $inputs)
     {
-        $function = new \Nette\PhpGenerator\Method($name);
-        $function->setVisibility('public');
+        $method = $class->addMethod($name);
 
         $templateRows = [];
         $args = [];
@@ -94,9 +75,7 @@ $invalid
             $args[] = $values;
         }
 
-        $function->setBody('return [
+        $method->setBody('return [
 '.implode("", $templateRows).'];', $args);
-
-        return str_replace("\t", "    ", strval($function));
     }
 }
