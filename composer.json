@@ -1,0 +1,15 @@
+{
+    "require": {
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Barryosull\\CodeGen\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BarryosullTest\\CodeGen\\": "tests/"
+        }
+    }
+}
