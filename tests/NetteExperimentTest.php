@@ -20,21 +20,22 @@ class NetteExperimentTest extends TestCase
         $actual = $this->generate($inputs);
 
         $expected =
-'function foo()
-{
-    return [
-        \'values1\' => [1, 2, 3],
-        \'values2\' => [1, 2, 3],
-        \'values3\' => [1, 2, 3],
-    ];
-}';
+'    public function foo()
+    {
+        return [
+            \'values1\' => [1, 2, 3],
+            \'values2\' => [1, 2, 3],
+            \'values3\' => [1, 2, 3],
+        ];
+    }';
 
         $this->assertEquals($expected, $actual);
     }
 
     private function generate(array $inputs): string
     {
-        $function = new \Nette\PhpGenerator\GlobalFunction('foo');
+        $function = new \Nette\PhpGenerator\Method('foo');
+        $function->setVisibility('public');
 
         $templateRows = [];
         $args = [];

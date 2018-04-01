@@ -6,9 +6,18 @@ class ValueOjectTestCase
 {
     public function generateTestCase(string $valueObjectClass, array $validValuesCollection, array $invalidValuesCollection): string
     {
-        $valid = $this->generateValid($valueObjectClass, $validValuesCollection);
+        $class = new \Nette\PhpGenerator\ClassType('$valueObjectClass');
 
-        $invalid = $this->generateInvalid($valueObjectClass, $invalidValuesCollection);
+        $class
+            ->setFinal()
+            ->setExtends('\PHPUnit\Framework\TestCase');
+
+
+        $valid = $this->generateValid($class, $valueObjectClass, $validValuesCollection);
+
+        $invalid = $this->generateInvalid($class, $valueObjectClass, $invalidValuesCollection);
+
+        return strval($class);
 
         return "<?php
 
@@ -23,6 +32,8 @@ $invalid
 
     private function generateValid(string $valueObjectClass, array $valuesCollection): string
     {
+        $provider = $this->generateProvider('validValues', $valuesCollection);
+
         $valuesReturn = '';
         foreach ($valuesCollection as $debugString => $values) {
 
@@ -45,28 +56,14 @@ $invalid
         $this->assertInstanceOf('.$valueObjectClass.'::class, $value);
     }
 
-    public function validValues()
-    {
-        return [
-'.$valuesReturn.'        ];
-    }';
+    '.$provider;
 
         return $templateValid;
     }
 
     private function generateInvalid(string $valueObjectClass, array $valuesCollection): string
     {
-        $valuesReturn = '';
-        foreach ($valuesCollection as $debugString => $values) {
-
-            $quoteWrappedValues = array_map(function($value){
-                return "'$value'";
-            }, $values);
-
-            $valuesString = implode(", ", $quoteWrappedValues);
-
-            $valuesReturn .= "            '".$debugString."' => [$valuesString],\n";
-        }
+        $provider = $this->generateProvider('invalidValues', $valuesCollection);
 
         $templateValid = '    /**
      * @test
@@ -78,12 +75,28 @@ $invalid
         new '.$valueObjectClass.'(...$values);
     }
 
-    public function invalidValues()
-    {
-        return [
-'.$valuesReturn.'        ];
-    }';
+    '.$provider;
 
         return $templateValid;
+    }
+
+    private function generateProvider(string $name, array $inputs): string
+    {
+        $function = new \Nette\PhpGenerator\Method($name);
+        $function->setVisibility('public');
+
+        $templateRows = [];
+        $args = [];
+
+        foreach ($inputs as $key=>$values) {
+            $templateRows[] = "    ? => [...?],\n";
+            $args[] = $key;
+            $args[] = $values;
+        }
+
+        $function->setBody('return [
+'.implode("", $templateRows).'];', $args);
+
+        return str_replace("\t", "    ", strval($function));
     }
 }
