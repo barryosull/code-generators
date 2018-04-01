@@ -5,6 +5,9 @@ namespace Barryosull\CodeGen;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
 
+/**
+ * TODO: Extract out sub classes
+ */
 class ValueOjectTestCase
 {
     public function generateTestCase(
