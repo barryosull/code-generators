@@ -9,12 +9,12 @@ $testGenerator = new ValueObjectTestCase();
 $classGenerator = new ValueObject();
 
 $namespace= $_POST['namespace'];
-$valueObject = $_POST['valueObject'];
+$className = $_POST['className'];
 
 $validInputs = json_decode($_POST['validValues'], true) ?? [];
 $invalidInputs = json_decode($_POST['invalidValues'], true) ?? [];
 
-$testCase = $testGenerator->generateTestCase($namespace, $valueObject, $validInputs, $invalidInputs);
-$class = $classGenerator->generateSingleValue($namespace, $valueObject);
+$testCase = $testGenerator->generateTestCase($namespace, $className, $validInputs, $invalidInputs);
+$class = $classGenerator->generateSingleValue($namespace, $className);
 
 echo "$testCase\n\n$class";

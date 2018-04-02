@@ -8,26 +8,62 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <h3>Form</h3>
-            <form id="generateForm">
-                <div class="form-group">
-                    <label for="namespace">Namespace</label>
-                    <input type="text" class="form-control" id="namespace">
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#valueObjectsForm">
+                                ValueObjects
+                            </button>
+                        </h5>
+                    </div>
+                    <form class="collapse" id="valueObjectsForm">
+                        <div class="form-group">
+                            <label for="namespace">Namespace</label>
+                            <input type="text" class="form-control namespace">
+                        </div>
+                        <div class="form-group">
+                            <label for="className">Class Name</label>
+                            <input type="text" class="form-control className">
+                        </div>
+                        <div class="form-group">
+                            <label for="validValues">Valid Values</label>
+                            <textarea class="form-control" id="validValues" rows="7"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="invalidValues">Invalid Values</label>
+                            <textarea class="form-control" id="invalidValues" rows="7"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Generate</button>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="valueObject">ValueObject</label>
-                    <input type="text" class="form-control" id="valueObject">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#compositeForm">
+                                Composite
+                            </button>
+                        </h5>
+                    </div>
+                    <form class="collapse" id="compositeForm">
+                        <div class="form-group">
+                            <label for="namespace">Namespace</label>
+                            <input type="text" class="form-control namespace">
+                        </div>
+                        <div class="form-group">
+                            <label for="className">Class Name</label>
+                            <input type="text" class="form-control" id="className">
+                        </div>
+                        <div class="form-group">
+                            <label for="constructorArgs">Constructor Args</label>
+                            <textarea class="form-control" id="constructorArgs" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Generate</button>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="validValues">Valid Values</label>
-                    <textarea class="form-control" id="validValues" rows="7"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="invalidValues">Invalid Values</label>
-                    <textarea class="form-control" id="invalidValues" rows="7"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" id="generate">Generate</button>
-            </form>
+
+            </div>
         </div>
         <div class="col">
             <h3>Generated Code</h3>
@@ -58,14 +94,28 @@
             JSON.stringify(defaultInput, null, 2)
         );
 
-        $("#generateForm").submit(function (evt) {
+        $("#valueObjectsForm").submit(function (evt) {
             evt.preventDefault();
 
-            $.post("/generate.php", {
-                namespace: $("#namespace").val(),
-                valueObject: $("#valueObject").val(),
+            $.post("/generateValueObject.php", {
+                namespace: $(this).find(".namespace").val(),
+                className: $(this).find(".className").val(),
                 validValues: $("#validValues").val(),
                 invalidValues: $("#invalidValues").val(),
+            }).done(function(generated) {
+                $("#generatedCode").text(generated);
+            }).fail(function() {
+                alert("Something went wrong");
+            });
+        });
+
+        $("#compositeForm").submit(function (evt) {
+            evt.preventDefault();
+
+            $.post("/generateComposite.php", {
+                namespace: $(this).find(".namespace").val(),
+                className: $(this).find(".className").val(),
+                constructorArgs: $("#constructorArgs").val(),
             }).done(function(generated) {
                 $("#generatedCode").text(generated);
             }).fail(function() {
