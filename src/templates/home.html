@@ -19,13 +19,14 @@
                 </li>
             </ul>
 
+            <div class="form-group">
+                <label for="namespace">Namespace</label>
+                <input type="text" class="form-control" id="namespace">
+            </div>
+
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane show active" id="pill-valueObjectsForm" role="tabpanel">
                     <form id="valueObjectsForm">
-                        <div class="form-group">
-                            <label for="namespace">Namespace</label>
-                            <input type="text" class="form-control namespace">
-                        </div>
                         <div class="form-group">
                             <label for="className">Class Name</label>
                             <input type="text" class="form-control className">
@@ -45,10 +46,6 @@
 
                 <div class="tab-pane" id="pill-compositeForm" role="tabpanel">
                     <form id="compositeForm">
-                        <div class="form-group">
-                            <label for="namespace">Namespace</label>
-                            <input type="text" class="form-control namespace">
-                        </div>
                         <div class="form-group">
                             <label for="className">Class Name</label>
                             <input type="text" class="form-control className">
@@ -96,7 +93,7 @@
             evt.preventDefault();
 
             $.post("/valueobject/generate", {
-                namespace: $(this).find(".namespace").val(),
+                namespace: $("#namespace").val(),
                 className: $(this).find(".className").val(),
                 validValues: $("#validValues").val(),
                 invalidValues: $("#invalidValues").val(),
@@ -111,7 +108,7 @@
             evt.preventDefault();
 
             $.post("/composite/generate", {
-                namespace: $(this).find(".namespace").val(),
+                namespace: $("#namespace").val(),
                 className: $(this).find(".className").val(),
                 constructorArgs: $("#constructorArgs").val(),
             }).done(function(generated) {
