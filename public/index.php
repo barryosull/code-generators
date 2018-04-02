@@ -1,133 +1,56 @@
-<!doctype html>
-<html lang="en">
-<head>
-<title>Code generator</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/cosmo/bootstrap.min.css">
-</head>
-<body>
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <h3>Generators</h3>
-            <div id="accordion">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#valueObjectsForm">
-                                ValueObjects
-                            </button>
-                        </h5>
-                    </div>
-                    <form class="collapse" id="valueObjectsForm">
-                        <div class="form-group">
-                            <label for="namespace">Namespace</label>
-                            <input type="text" class="form-control namespace">
-                        </div>
-                        <div class="form-group">
-                            <label for="className">Class Name</label>
-                            <input type="text" class="form-control className">
-                        </div>
-                        <div class="form-group">
-                            <label for="validValues">Valid Values</label>
-                            <textarea class="form-control" id="validValues" rows="7"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="invalidValues">Invalid Values</label>
-                            <textarea class="form-control" id="invalidValues" rows="7"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Generate</button>
-                        <br><br>
-                    </form>
-                </div>
+<?php
 
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#compositeForm">
-                                Composite
-                            </button>
-                        </h5>
-                    </div>
-                    <form class="collapse" id="compositeForm">
-                        <div class="form-group">
-                            <label for="namespace">Namespace</label>
-                            <input type="text" class="form-control namespace">
-                        </div>
-                        <div class="form-group">
-                            <label for="className">Class Name</label>
-                            <input type="text" class="form-control className">
-                        </div>
-                        <div class="form-group">
-                            <label for="constructorArgs">Constructor Args</label>
-                            <textarea class="form-control" id="constructorArgs" rows="3"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Generate</button>
-                        <br><br>
-                    </form>
-                </div>
+use Barryosull\CodeGen\Generators\Composite;
+use Barryosull\CodeGen\Generators\ValueObject;
+use Barryosull\CodeGen\Generators\ValueObjectTestCase;
 
-            </div>
-        </div>
-        <div class="col">
-            <h3>Generated Code</h3>
-<pre style="background-color: #000; color: #fff; padding: 10px;"><code id="generatedCode">Waiting</code></pre>
-        </div>
-    </div>
-</div>
+require __DIR__.'/../vendor/autoload.php';
 
-<script
-    src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+$app = new Slim\App();
 
-<script type="text/javascript">
+$app->get('/', function () {
+    return file_get_contents(__DIR__."/../src/templates/home.html");
+});
 
-    var defaultInput = {
-        "title": ["value"]
-    };
+$app->post('/composite/generate', function () {
 
-    $(function(){
+    $classGenerator = new Composite();
 
-        $("#validValues").val(
-            JSON.stringify(defaultInput, null, 2)
-        );
-        $("#invalidValues").val(
-            JSON.stringify(defaultInput, null, 2)
-        );
+    $namespace = $_POST['namespace'];
+    $className = $_POST['className'];
 
-        $("#valueObjectsForm").submit(function (evt) {
-            evt.preventDefault();
+    $constructorArgs = [];
+    foreach (explode(",", $_POST['constructorArgs']) as $argString) {
+        $argString = trim($argString);
+        $parts = explode(" ", $argString);
 
-            $.post("/generateValueObject.php", {
-                namespace: $(this).find(".namespace").val(),
-                className: $(this).find(".className").val(),
-                validValues: $("#validValues").val(),
-                invalidValues: $("#invalidValues").val(),
-            }).done(function(generated) {
-                $("#generatedCode").text(generated);
-            }).fail(function() {
-                alert("Something went wrong");
-            });
-        });
+        if (count($parts) != 2) {
+            throw new Exception("Invalid number of parts in param '$argString'");
+        }
 
-        $("#compositeForm").submit(function (evt) {
-            evt.preventDefault();
+        $type = $parts[0];
+        $value = str_replace('$', '', $parts[1]);
 
-            $.post("/generateComposite.php", {
-                namespace: $(this).find(".namespace").val(),
-                className: $(this).find(".className").val(),
-                constructorArgs: $("#constructorArgs").val(),
-            }).done(function(generated) {
-                $("#generatedCode").text(generated);
-            }).fail(function() {
-                alert("Something went wrong");
-            });
-        });
-    });
+        $constructorArgs[$type] = $value;
+    }
 
-</script>
+    return $classGenerator->generateComposite($namespace, $className, $constructorArgs);
+});
 
-</body>
-</html>
+$app->post('/valueobject/generate', function () {
+    $testGenerator = new ValueObjectTestCase();
+    $classGenerator = new ValueObject();
+
+    $namespace= $_POST['namespace'];
+    $className = $_POST['className'];
+
+    $validInputs = json_decode($_POST['validValues'], true) ?? [];
+    $invalidInputs = json_decode($_POST['invalidValues'], true) ?? [];
+
+    $testCase = $testGenerator->generateTestCase($namespace, $className, $validInputs, $invalidInputs);
+    $class = $classGenerator->generateSingleValue($namespace, $className);
+
+    return "$testCase\n\n$class";
+});
+
+$app->run();
