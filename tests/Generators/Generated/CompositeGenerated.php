@@ -2,6 +2,9 @@
 
 namespace BarryosullTest\CodeGen\Generators\Generators;
 
+use DateTime;
+use Address\Business;
+
 class CompositeGenerated
 {
     private $valueA;
@@ -11,7 +14,7 @@ class CompositeGenerated
     private $address;
 
 
-    public function __construct(string $valueA, \DateTime $date, \Address\Business $address)
+    public function __construct(string $valueA, DateTime $date, Business $address)
     {
         $this->valueA = $valueA;
         $this->date = $date;
@@ -25,13 +28,13 @@ class CompositeGenerated
     }
 
 
-    public function getDate(): \DateTime
+    public function getDate(): DateTime
     {
         return $this->date;
     }
 
 
-    public function getAddress(): \Address\Business
+    public function getAddress(): Business
     {
         return $this->address;
     }

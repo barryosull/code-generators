@@ -13,6 +13,9 @@ class Composite
         $class = $namespace->addClass($className);
 
         foreach ($args as $type => $property) {
+
+            $namespace->addUse($type);
+
             $class->addProperty($property)
                 ->setVisibility('private');
         }
