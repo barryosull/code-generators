@@ -16,7 +16,6 @@ class ValueObjectTest extends TestCase
         $this->assertInstanceOf(ValueObject::class, $value);
     }
 
-
     public function validValues()
     {
         return [
@@ -24,7 +23,6 @@ class ValueObjectTest extends TestCase
             'description b' => ['value4', 'value5', 'value6'],
         ];
     }
-
 
     /**
      * @test
@@ -35,7 +33,6 @@ class ValueObjectTest extends TestCase
         $this->expectException(ValueException::class);
         new ValueObject(...$values);
     }
-
 
     public function invalidValues()
     {
