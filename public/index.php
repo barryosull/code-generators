@@ -20,11 +20,11 @@
                 </div>
                 <div class="form-group">
                     <label for="validValues">Valid Values</label>
-                    <textarea class="form-control" id="validValues" rows="3"></textarea>
+                    <textarea class="form-control" id="validValues" rows="7"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="invalidValues">Invalid Values</label>
-                    <textarea class="form-control" id="invalidValues" rows="3"></textarea>
+                    <textarea class="form-control" id="invalidValues" rows="7"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary" id="generate">Generate</button>
             </form>
@@ -45,7 +45,18 @@
 
 <script type="text/javascript">
 
+    var defaultInput = {
+        "title": ["value"]
+    };
+
     $(function(){
+
+        $("#validValues").val(
+            JSON.stringify(defaultInput, null, 2)
+        );
+        $("#invalidValues").val(
+            JSON.stringify(defaultInput, null, 2)
+        );
 
         $("#generateForm").submit(function (evt) {
             evt.preventDefault();
