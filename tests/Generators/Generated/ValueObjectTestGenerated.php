@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Namespace;
+namespace BarryosullTest\CodeGen\Generators\Generators;
 
 use PHPUnit\Framework\TestCase;
 
-class ExpectedValueObjectTest extends TestCase
+class ValueObjectTest extends TestCase
 {
     /**
      * @test
@@ -12,8 +12,8 @@ class ExpectedValueObjectTest extends TestCase
      */
     public function canCreateValidTypes(...$values)
     {
-        $value = new ExpectedValueObject(...$values);
-        $this->assertInstanceOf(ExpectedValueObject::class, $value);
+        $value = new ValueObject(...$values);
+        $this->assertInstanceOf(ValueObject::class, $value);
     }
 
 
@@ -33,7 +33,7 @@ class ExpectedValueObjectTest extends TestCase
     public function cannotCreateInvalidTypes(...$values)
     {
         $this->expectException(ValueException::class);
-        new ExpectedValueObject(...$values);
+        new ValueObject(...$values);
     }
 
 

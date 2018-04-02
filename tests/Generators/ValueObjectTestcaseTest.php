@@ -12,8 +12,8 @@ class ValueObjectTestcaseTest extends TestCase
      */
     public function it_generates_a_valid_testcase()
     {
-        $namespace = 'Tests\Namespace';
-        $type = 'ExpectedValueObject';
+        $namespace = 'BarryosullTest\CodeGen\Generators\Generators';
+        $type = 'ValueObject';
         $validValues = [
             'description a' => ['value1', 'value2', 'value3'],
             'description b' => ['value4', 'value5', 'value6'],
@@ -27,7 +27,7 @@ class ValueObjectTestcaseTest extends TestCase
 
         $generated = $generator->generateTestCase($namespace, $type, $validValues, $invalidValues);
 
-        $expected = file_get_contents(__DIR__ . "/ExpectedValueObjectTest.php.generated");
+        $expected = file_get_contents(__DIR__ . "/Generated/ValueObjectTestGenerated.php");
 
         $this->assertEquals($expected, $generated);
     }
