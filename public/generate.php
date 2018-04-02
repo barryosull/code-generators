@@ -1,10 +1,10 @@
 <?php
 
-use Barryosull\CodeGen\Generators\ValueOjectTestCase;
+use Barryosull\CodeGen\Generators\ValueObjectTestCase;
 
 require_once __DIR__."/../vendor/autoload.php";
 
-$generator = new ValueOjectTestCase();
+$generator = new ValueObjectTestCase();
 
 $namespace= $_POST['namespace'];
 $valueObject = $_POST['valueObject'];

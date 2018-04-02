@@ -8,7 +8,7 @@ use Nette\PhpGenerator\PhpNamespace;
 /**
  * TODO: Extract out sub classes
  */
-class ValueOjectTestCase
+class ValueObjectTestCase
 {
     public function generateTestCase(
         string $namespace,
@@ -27,24 +27,7 @@ class ValueOjectTestCase
 
         $this->generateInvalid($class, $valueObjectClass, $invalidValuesCollection);
 
-        return $this->output($namespace);
-    }
-
-    private function output($namespace)
-    {
-        $code = $this->tabsToSpaces(strval($namespace));
-
-        $code =
-            "<?php
-
-$code";
-
-        return $code;
-    }
-
-    private function tabsToSpaces(string $code)
-    {
-        return str_replace("\t", "    ", $code);
+        return Formatter::format(strval($namespace));
     }
 
     private function generateValid(ClassType $class, string $valueObjectClass, array $valuesCollection)

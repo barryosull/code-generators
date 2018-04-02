@@ -3,7 +3,7 @@
 namespace BarryosullTest\CodeGen\Generators;
 
 use PHPUnit\Framework\TestCase;
-use Barryosull\CodeGen\Generators\ValueOjectTestCase;
+use Barryosull\CodeGen\Generators\ValueObjectTestCase;
 
 class ValueObjectTestcaseTest extends TestCase
 {
@@ -23,7 +23,7 @@ class ValueObjectTestcaseTest extends TestCase
             'description b' => ['value4', 'value5'],
         ];
 
-        $generator = new ValueOjectTestCase();
+        $generator = new ValueObjectTestCase();
 
         $generated = $generator->generateTestCase($namespace, $type, $validValues, $invalidValues);
 
