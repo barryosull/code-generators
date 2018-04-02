@@ -1,6 +1,6 @@
 <?php
 
-namespace Barryosull\CodeGen;
+namespace Barryosull\CodeGen\Generators;
 
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;

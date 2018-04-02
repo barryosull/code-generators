@@ -1,9 +1,9 @@
 <?php
 
-namespace BarryosullTest\CodeGen;
+namespace BarryosullTest\CodeGen\Generators;
 
 use PHPUnit\Framework\TestCase;
-use Barryosull\CodeGen\ValueOjectTestCase;
+use Barryosull\CodeGen\Generators\ValueOjectTestCase;
 
 class ValueObjectTestcaseTest extends TestCase
 {
@@ -27,7 +27,7 @@ class ValueObjectTestcaseTest extends TestCase
 
         $generated = $generator->generateTestCase($namespace, $type, $validValues, $invalidValues);
 
-        $expected = file_get_contents(__DIR__."/ExpectedValueObjectTest.php.generated");
+        $expected = file_get_contents(__DIR__ . "/ExpectedValueObjectTest.php.generated");
 
         $this->assertEquals($expected, $generated);
     }
