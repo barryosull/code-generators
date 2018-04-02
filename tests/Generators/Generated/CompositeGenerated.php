@@ -2,8 +2,8 @@
 
 namespace BarryosullTest\CodeGen\Generators\Generators;
 
-use DateTime;
 use Address\Business;
+use DateTime;
 
 class CompositeGenerated
 {
