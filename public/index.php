@@ -8,6 +8,7 @@
 <div class="container">
     <div class="row">
         <div class="col">
+            <h3>Generators</h3>
             <div id="accordion">
                 <div class="card">
                     <div class="card-header">
@@ -35,6 +36,7 @@
                             <textarea class="form-control" id="invalidValues" rows="7"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Generate</button>
+                        <br><br>
                     </form>
                 </div>
 
@@ -60,6 +62,7 @@
                             <textarea class="form-control" id="constructorArgs" rows="3"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Generate</button>
+                        <br><br>
                     </form>
                 </div>
 
@@ -67,7 +70,7 @@
         </div>
         <div class="col">
             <h3>Generated Code</h3>
-<pre style="background-color: #000; color: #fff; padding: 10px;"><code id="generatedCode"></code></pre>
+<pre style="background-color: #000; color: #fff; padding: 10px;"><code id="generatedCode">Waiting</code></pre>
         </div>
     </div>
 </div>
