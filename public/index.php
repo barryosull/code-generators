@@ -53,7 +53,7 @@
                         </div>
                         <div class="form-group">
                             <label for="className">Class Name</label>
-                            <input type="text" class="form-control" id="className">
+                            <input type="text" class="form-control className">
                         </div>
                         <div class="form-group">
                             <label for="constructorArgs">Constructor Args</label>

@@ -9,10 +9,10 @@ $classGenerator = new Composite();
 $namespace= $_POST['namespace'];
 $className = $_POST['className'];
 
-$constructorArgs = array_map(function($argString){
-
+$constructorArgs = [];
+foreach ( explode(",", $_POST['constructorArgs']) as $argString) {
     $argString = trim($argString);
-    $parts = explode(",", $argString);
+    $parts = explode(" ", $argString);
 
     if (count($parts) != 2) {
         throw new Exception("Invalid number of parts in param '$argString'");
@@ -21,9 +21,8 @@ $constructorArgs = array_map(function($argString){
     $type = $parts[0];
     $value = str_replace('$', '', $parts[1]);
 
-    return [$type, $value];
-
-}, explode(",", $_POST['constructorArgs']));
+    $constructorArgs[$type] = $value;
+}
 
 $class = $classGenerator->generateComposite($namespace, $className, $constructorArgs);
 
