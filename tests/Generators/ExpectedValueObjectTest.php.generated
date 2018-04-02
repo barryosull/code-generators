@@ -1,6 +1,10 @@
 <?php
 
-class ExpectedValueObjectTest extends \PHPUnit\Framework\TestCase
+namespace Tests\Namespace;
+
+use PHPUnit\Framework\TestCase;
+
+class ExpectedValueObjectTest extends TestCase
 {
     /**
      * @test
@@ -12,6 +16,7 @@ class ExpectedValueObjectTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(ExpectedValueObject::class, $value);
     }
 
+
     public function validValues()
     {
         return [
@@ -19,6 +24,7 @@ class ExpectedValueObjectTest extends \PHPUnit\Framework\TestCase
             'description b' => ['value4', 'value5', 'value6'],
         ];
     }
+
 
     /**
      * @test
@@ -29,6 +35,7 @@ class ExpectedValueObjectTest extends \PHPUnit\Framework\TestCase
         $this->expectException(ValueException::class);
         new ExpectedValueObject(...$values);
     }
+
 
     public function invalidValues()
     {
